@@ -80,7 +80,12 @@ table, th, td {
 	<div class="container">
 		<div class="row">
 
-			<div class="col-md-2"></div>
+			<div class="col-md-2">
+				<div class="form-group">
+					<button type="button" id="newGame" class="btn btn-action btn-lg">New
+						game</button>
+				</div>
+			</div>
 			<div class="col-md-8">
 
 				<table>
@@ -93,13 +98,14 @@ table, th, td {
 						<td class="tic-tac blank-cell" id="cell-3"></td>
 						<td class="tic-tac blank-cell" id="cell-4"></td>
 						<td class="tic-tac blank-cell" id="cell-5"></td>
-					</tr>		
+					</tr>
 					<tr>
 						<td class="tic-tac blank-cell" id="cell-6"></td>
 						<td class="tic-tac blank-cell" id="cell-7"></td>
 						<td class="tic-tac blank-cell" id="cell-8"></td>
 					</tr>
 				</table>
+
 			</div>
 			<div class="col-md-2"></div>
 		</div>
@@ -116,123 +122,293 @@ table, th, td {
 		integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 		crossorigin="anonymous"></script>
 	<script type="text/javascript">
-	
-		function containsAll(needles, haystack){ 
-		  for(var i = 0 , len = needles.length; i < len; i++){
-		     if($.inArray(needles[i], haystack) == -1) return false;
-		  }
-		  return true;
+		function containsAll(needles, haystack) {
+			for (var i = 0, len = needles.length; i < len; i++) {
+				if ($.inArray(needles[i], haystack) == -1)
+					return false;
+			}
+			return true;
 		}
-	
+
 		var gameFinishedGlobal = false;
-		$(document).ready(function() {
-			$(".tic-tac").click(function() {
-				var cellId = $(this).attr("id").replace("cell-", "");
-				if(gameFinishedGlobal) {
-					return;
-				}
-				$.ajax({
-					contentType : 'application/json',
-					processData : false,
-					type : "POST",
-					dataType : "json",
-					url : "/user-turn",
-					data : JSON.stringify({
-						"value" : cellId
-					}),
-					success : function(result) {
-						var i, len, deck = result.deck, cellSelector, cellClass;
-						for (len = deck.length, i=0; i<len; ++i) {
-							cellSelector = "#cell-" + i;
-							cellClass = "tic-tac " + deck[i] + "-cell";
-							$(cellSelector).attr("class", cellClass);
-						}
-						
-						if(result.gameFinished) {
-							gameFinishedGlobal = true;
-							$(".tic-tac").addClass("tic-tac-disabled");
-							
-							var xCells = $('.x-cell').map( function() {
-							    return $(this).attr('id').replace("cell-", "");
-							}).get();
-							
-							if(containsAll(["0", "1", "2"], xCells)) {
-								$("#cell-0, #cell-1, #cell-2").addClass("x-final-cell");
-							}
-							
-							if(containsAll(["3", "4", "5"], xCells)) {
-								$("#cell-3, #cell-4, #cell-5").addClass("x-final-cell");
-							}
-							
-							if(containsAll(["6", "7", "8"], xCells)) {
-								$("#cell-6, #cell-7, #cell-8").addClass("x-final-cell");
-							}
-							
-							if(containsAll(["0", "4", "8"], xCells)) {
-								$("#cell-0, #cell-4, #cell-8").addClass("x-final-cell");
-							}
-							
-							if(containsAll(["2", "4", "6"], xCells)) {
-								$("#cell-2, #cell-4, #cell-6").addClass("x-final-cell");
-							}
-							
-							if(containsAll(["0", "3", "6"], xCells)) {
-								$("#cell-0, #cell-3, #cell-6").addClass("x-final-cell");
-							}
-							
-							if(containsAll(["1", "4", "7"], xCells)) {
-								$("#cell-1, #cell-4, #cell-7").addClass("x-final-cell");
-							}
-							
-							if(containsAll(["2", "5", "8"], xCells)) {
-								$("#cell-2, #cell-5, #cell-8").addClass("x-final-cell");
-							}
-							
-							
-							var oCells = $('.o-cell').map( function() {
-							    return $(this).attr('id').replace("cell-", "");
-							}).get();
-							
-							if(containsAll(["0", "1", "2"], oCells)) {
-								$("#cell-0, #cell-1, #cell-2").addClass("o-final-cell");
-							}
-							
-							if(containsAll(["3", "4", "5"], oCells)) {
-								$("#cell-3, #cell-4, #cell-5").addClass("o-final-cell");
-							}
-							
-							if(containsAll(["6", "7", "8"], oCells)) {
-								$("#cell-6, #cell-7, #cell-8").addClass("o-final-cell");
-							}
-							
-							if(containsAll(["0", "4", "8"], oCells)) {
-								$("#cell-0, #cell-4, #cell-8").addClass("o-final-cell");
-							}
-							
-							if(containsAll(["2", "4", "6"], oCells)) {
-								$("#cell-2, #cell-4, #cell-6").addClass("o-final-cell");
-							}
-							
-							if(containsAll(["0", "3", "6"], oCells)) {
-								$("#cell-0, #cell-3, #cell-6").addClass("o-final-cell");
-							}
-							
-							if(containsAll(["1", "4", "7"], oCells)) {
-								$("#cell-1, #cell-4, #cell-7").addClass("o-final-cell");
-							}
-							
-							if(containsAll(["2", "5", "8"], oCells)) {
-								$("#cell-2, #cell-5, #cell-8").addClass("o-final-cell");
-							}
-							
-							alert(result.message);
-						}
-					}
-				});
-			});
-			
-		});
-			
+		$(document)
+				.ready(
+						function() {
+							$("#newGame").click(function() {
+								window.location.reload(true);
+							});
+
+							$(".tic-tac")
+									.click(
+											function() {
+												var cellId = $(this).attr("id")
+														.replace("cell-", "");
+												if (gameFinishedGlobal) {
+													return;
+												}
+												$
+														.ajax({
+															contentType : 'application/json',
+															processData : false,
+															type : "POST",
+															dataType : "json",
+															url : "/user-turn",
+															data : JSON
+																	.stringify({
+																		"value" : cellId
+																	}),
+															success : function(
+																	result) {
+																var i, len, deck = result.deck, cellSelector, cellClass;
+																for (
+																		len = deck.length,
+																		i = 0; i < len; ++i) {
+																	cellSelector = "#cell-"
+																			+ i;
+																	cellClass = "tic-tac "
+																			+ deck[i]
+																			+ "-cell";
+																	$(
+																			cellSelector)
+																			.attr(
+																					"class",
+																					cellClass);
+																}
+
+																if (result.gameFinished) {
+																	gameFinishedGlobal = true;
+																	$(
+																			".tic-tac")
+																			.addClass(
+																					"tic-tac-disabled");
+
+																	var xCells = $(
+																			'.x-cell')
+																			.map(
+																					function() {
+																						return $(
+																								this)
+																								.attr(
+																										'id')
+																								.replace(
+																										"cell-",
+																										"");
+																					})
+																			.get();
+
+																	if (containsAll(
+																			[
+																					"0",
+																					"1",
+																					"2" ],
+																			xCells)) {
+																		$(
+																				"#cell-0, #cell-1, #cell-2")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"3",
+																					"4",
+																					"5" ],
+																			xCells)) {
+																		$(
+																				"#cell-3, #cell-4, #cell-5")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"6",
+																					"7",
+																					"8" ],
+																			xCells)) {
+																		$(
+																				"#cell-6, #cell-7, #cell-8")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"0",
+																					"4",
+																					"8" ],
+																			xCells)) {
+																		$(
+																				"#cell-0, #cell-4, #cell-8")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"2",
+																					"4",
+																					"6" ],
+																			xCells)) {
+																		$(
+																				"#cell-2, #cell-4, #cell-6")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"0",
+																					"3",
+																					"6" ],
+																			xCells)) {
+																		$(
+																				"#cell-0, #cell-3, #cell-6")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"1",
+																					"4",
+																					"7" ],
+																			xCells)) {
+																		$(
+																				"#cell-1, #cell-4, #cell-7")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"2",
+																					"5",
+																					"8" ],
+																			xCells)) {
+																		$(
+																				"#cell-2, #cell-5, #cell-8")
+																				.addClass(
+																						"x-final-cell");
+																	}
+
+																	var oCells = $(
+																			'.o-cell')
+																			.map(
+																					function() {
+																						return $(
+																								this)
+																								.attr(
+																										'id')
+																								.replace(
+																										"cell-",
+																										"");
+																					})
+																			.get();
+
+																	if (containsAll(
+																			[
+																					"0",
+																					"1",
+																					"2" ],
+																			oCells)) {
+																		$(
+																				"#cell-0, #cell-1, #cell-2")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"3",
+																					"4",
+																					"5" ],
+																			oCells)) {
+																		$(
+																				"#cell-3, #cell-4, #cell-5")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"6",
+																					"7",
+																					"8" ],
+																			oCells)) {
+																		$(
+																				"#cell-6, #cell-7, #cell-8")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"0",
+																					"4",
+																					"8" ],
+																			oCells)) {
+																		$(
+																				"#cell-0, #cell-4, #cell-8")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"2",
+																					"4",
+																					"6" ],
+																			oCells)) {
+																		$(
+																				"#cell-2, #cell-4, #cell-6")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"0",
+																					"3",
+																					"6" ],
+																			oCells)) {
+																		$(
+																				"#cell-0, #cell-3, #cell-6")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"1",
+																					"4",
+																					"7" ],
+																			oCells)) {
+																		$(
+																				"#cell-1, #cell-4, #cell-7")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	if (containsAll(
+																			[
+																					"2",
+																					"5",
+																					"8" ],
+																			oCells)) {
+																		$(
+																				"#cell-2, #cell-5, #cell-8")
+																				.addClass(
+																						"o-final-cell");
+																	}
+
+																	alert(result.message);
+																}
+															}
+														});
+											});
+
+						});
 	</script>
 </body>
 </html>

@@ -144,14 +144,43 @@ public class XO {
 						computerElementsCount++;
 					}
 				}
-				if (computerElementsCount >= 1) {
+				if (computerElementsCount == 2) {
 					goalList.add(new ArrayList<>(winResult));
 				}
 			}
 		}
+		
+		List<List<String>> goalLightList = new ArrayList<List<String>>();
+		for (List<String> winResult : winResultsAll) {
+			boolean hasUserElement = false;
+			for (String userInput : userInputs) {
+				if (winResult.contains(userInput)) {
+					hasUserElement = true;
+					break;
+				}
+			}
+			if (!hasUserElement) {
+				int computerElementsCount = 0;
+				for (String computerInput : computerInputs) {
+					if (winResult.contains(computerInput)) {
+						computerElementsCount++;
+					}
+				}
+				if (computerElementsCount == 1) {
+					goalLightList.add(new ArrayList<>(winResult));
+				}
+			}
+		}
 
-		if (goalList.size() > 0 && dangerList.size() == 0) {
+		if (goalList.size() > 0) {
 			List<String> offenciveTurnList = new ArrayList<>(goalList.get(0));
+			offenciveTurnList.removeAll(computerInputs);
+			String offenciveTurn = offenciveTurnList.get(0);
+			deck.set(Integer.parseInt(offenciveTurn), "o");
+			placeholders.remove(offenciveTurn);
+			computerInputs.add(offenciveTurn);
+		} else if (goalLightList.size() > 0 && dangerList.size() == 0) {
+			List<String> offenciveTurnList = new ArrayList<>(goalLightList.get(0));
 			offenciveTurnList.removeAll(computerInputs);
 			String offenciveTurn = offenciveTurnList.get(0);
 			deck.set(Integer.parseInt(offenciveTurn), "o");
