@@ -46,8 +46,16 @@ table, th, td {
 	background: #ffffff url("/images/x.png") no-repeat local center;
 }
 
+.x-final-cell {
+	background: #ffffff url("/images/x-final.png") no-repeat local center;
+}
+
 .o-cell {
 	background: #ffffff url("/images/o.png") no-repeat local center;
+}
+
+.o-final-cell {
+	background: #ffffff url("/images/o-final.png") no-repeat local center;
 }
 </style>
 	<!-- Static navbar -->
@@ -108,6 +116,14 @@ table, th, td {
 		integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 		crossorigin="anonymous"></script>
 	<script type="text/javascript">
+	
+		function containsAll(needles, haystack){ 
+		  for(var i = 0 , len = needles.length; i < len; i++){
+		     if($.inArray(needles[i], haystack) == -1) return false;
+		  }
+		  return true;
+		}
+	
 		var gameFinishedGlobal = false;
 		$(document).ready(function() {
 			$(".tic-tac").click(function() {
@@ -135,6 +151,80 @@ table, th, td {
 						if(result.gameFinished) {
 							gameFinishedGlobal = true;
 							$(".tic-tac").addClass("tic-tac-disabled");
+							
+							var xCells = $('.x-cell').map( function() {
+							    return $(this).attr('id').replace("cell-", "");
+							}).get();
+							
+							if(containsAll(["0", "1", "2"], xCells)) {
+								$("#cell-0, #cell-1, #cell-2").addClass("x-final-cell");
+							}
+							
+							if(containsAll(["3", "4", "5"], xCells)) {
+								$("#cell-3, #cell-4, #cell-5").addClass("x-final-cell");
+							}
+							
+							if(containsAll(["6", "7", "8"], xCells)) {
+								$("#cell-6, #cell-7, #cell-8").addClass("x-final-cell");
+							}
+							
+							if(containsAll(["0", "4", "8"], xCells)) {
+								$("#cell-0, #cell-4, #cell-8").addClass("x-final-cell");
+							}
+							
+							if(containsAll(["2", "4", "6"], xCells)) {
+								$("#cell-2, #cell-4, #cell-6").addClass("x-final-cell");
+							}
+							
+							if(containsAll(["0", "3", "6"], xCells)) {
+								$("#cell-0, #cell-3, #cell-6").addClass("x-final-cell");
+							}
+							
+							if(containsAll(["1", "4", "7"], xCells)) {
+								$("#cell-1, #cell-4, #cell-7").addClass("x-final-cell");
+							}
+							
+							if(containsAll(["2", "5", "8"], xCells)) {
+								$("#cell-2, #cell-5, #cell-8").addClass("x-final-cell");
+							}
+							
+							
+							var oCells = $('.o-cell').map( function() {
+							    return $(this).attr('id').replace("cell-", "");
+							}).get();
+							
+							if(containsAll(["0", "1", "2"], oCells)) {
+								$("#cell-0, #cell-1, #cell-2").addClass("o-final-cell");
+							}
+							
+							if(containsAll(["3", "4", "5"], oCells)) {
+								$("#cell-3, #cell-4, #cell-5").addClass("o-final-cell");
+							}
+							
+							if(containsAll(["6", "7", "8"], oCells)) {
+								$("#cell-6, #cell-7, #cell-8").addClass("o-final-cell");
+							}
+							
+							if(containsAll(["0", "4", "8"], oCells)) {
+								$("#cell-0, #cell-4, #cell-8").addClass("o-final-cell");
+							}
+							
+							if(containsAll(["2", "4", "6"], oCells)) {
+								$("#cell-2, #cell-4, #cell-6").addClass("o-final-cell");
+							}
+							
+							if(containsAll(["0", "3", "6"], oCells)) {
+								$("#cell-0, #cell-3, #cell-6").addClass("o-final-cell");
+							}
+							
+							if(containsAll(["1", "4", "7"], oCells)) {
+								$("#cell-1, #cell-4, #cell-7").addClass("o-final-cell");
+							}
+							
+							if(containsAll(["2", "5", "8"], oCells)) {
+								$("#cell-2, #cell-5, #cell-8").addClass("o-final-cell");
+							}
+							
 							alert(result.message);
 						}
 					}
