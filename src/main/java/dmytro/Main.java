@@ -13,15 +13,14 @@ import com.google.gson.Gson;
 
 public class Main {
 
-    // private Set<Game> games = new HashSet<Game>();
-    private static XO game;
-
+    
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
         staticFileLocation("/public"); // Static files
 
         get("/", (req, res) -> {
-            game = new XO();
+            XO game = new XO();
+            req.session().attribute("game", game);
             Map<String, Object> attributes = new HashMap<>();
             String sessionId = req.session().id();
             return new ModelAndView(attributes, "index.html");
@@ -30,13 +29,15 @@ public class Main {
         Gson gson = new Gson();
 
         post("/deck", (req, res) -> {
+            XO game = req.session().attribute("game");
             return game.getDeck();
         }, gson::toJson);
 
         post("/user-turn", (req, res) -> {
             String userInputString = req.body();
             Input input = gson.fromJson(userInputString, Input.class);
-
+            XO game = req.session().attribute("game");
+            req.session().attribute("game", game);
             return game.makeTurn(input.getValue());
         }, gson::toJson);
 
